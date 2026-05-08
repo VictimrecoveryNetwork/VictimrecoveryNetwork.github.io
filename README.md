@@ -1,10 +1,14 @@
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>ScamReport – Report a Scam</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 </head>
 
 <body class="bg-slate-100 min-h-screen flex flex-col">
@@ -24,10 +28,21 @@
   <!-- Main -->
   <main class="flex-1">
 
-    <!-- Hero -->
-    <section id="about" class="bg-slate-900 text-white">
-      <div class="max-w-5xl mx-auto px-4 py-16">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">Report scams. Protect others.</h2>
+    <!-- HERO WITH BLUR + PARALLAX + OVERLAY -->
+    <section id="about" class="relative text-white overflow-hidden">
+
+      <!-- Background Image -->
+      <div id="bgImage"
+           class="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
+           style="background-image: url('images/recovery-bg.jpg'); filter: blur(4px);">
+      </div>
+
+      <!-- Dark Gradient Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/80"></div>
+
+      <!-- Foreground Content -->
+      <div class="relative max-w-5xl mx-auto px-4 py-20">
+        <h2 class="text-4xl md:text-5xl font-bold mb-4">Report scams. Protect others.</h2>
         <p class="text-slate-200 max-w-xl mb-6">
           Use this form to report online scams, fraud attempts, or suspicious activity. Your report helps protect others.
         </p>
@@ -36,6 +51,7 @@
           Report a Scam
         </button>
       </div>
+
     </section>
 
     <!-- Report Form -->
@@ -126,21 +142,44 @@
     </div>
   </footer>
 
+  <!-- GSAP EFFECTS -->
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Fade-in background
+    gsap.from("#bgImage", {
+      opacity: 0,
+      duration: 1.5,
+      ease: "power2.out"
+    });
+
+    // Parallax effect
+    gsap.to("#bgImage", {
+      y: 120,
+      scale: 1.2,
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#about",
+        start: "top top",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    // Form submit → redirect
     document.getElementById('scamForm').addEventListener('submit', function (e) {
       e.preventDefault();
-
       const ref = "SR-" + Math.floor(100000 + Math.random() * 900000);
       sessionStorage.setItem("scamReportRef", ref);
-
       window.location.href = "thank-you.html";
     });
   </script>
 
 </body>
 </html>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -175,3 +214,4 @@
 
 </body>
 </html>
+
